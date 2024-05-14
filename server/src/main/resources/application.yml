@@ -1,0 +1,19 @@
+server:
+  port: ${SERVER_PORT:80}
+
+spring:
+  application:
+    name: heavy-mock-http-server
+
+  threads:
+    virtual:
+      enabled: true
+
+heavy:
+  mock:
+    config: ${HEAVY_MOCK_CONFIG}
+#
+#logging:
+#  pattern:
+#    console: "%d{HH:mm:ss.SSS} %lightgray([%t]) %mdc{trackId} %highlight(%-5level) %logger{36} - %msg%n"
+#

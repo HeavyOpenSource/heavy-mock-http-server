@@ -1,0 +1,84 @@
+# Declaration of endpoints
+endpoints:
+  - name: No Delay Hello
+    # If the request matches the following criteria, the response will be returned
+    request:
+      methods:
+        - GET
+      paths:
+        - /hello/no-delay # This is a regular expression
+
+    # The response to be returned
+    response:
+      status: OK
+      headers:
+        "Content-Type":
+          - application/json
+      body:
+        content: |
+          {
+            "message": "Hello, Heavy!"
+          }
+
+  - name: 200ms Delayed Hello
+    # If the request matches the following criteria, the response will be returned
+    request:
+      methods:
+        - GET
+      paths:
+        - /hello/200 # This is a regular expression
+
+    # The response to be returned
+    response:
+      delay: 200
+      status: OK
+      headers:
+        "Content-Type":
+          - application/json
+      body:
+        content: |
+          {
+            "message": "Hello, Heavy!"
+          }
+
+  - name: 500ms Delayed Hello
+    # If the request matches the following criteria, the response will be returned
+    request:
+      methods:
+        - GET
+      paths:
+        - /hello/500 # This is a regular expression
+
+    # The response to be returned
+    response:
+      delay: 500
+      status: OK
+      headers:
+        "Content-Type":
+          - application/json
+      body:
+        content: |
+          {
+            "message": "Hello, Heavy!"
+          }
+
+  - name: 1000ms Delayed Hello
+    # If the request matches the following criteria, the response will be returned
+    request:
+      methods:
+        - GET
+      paths:
+        - /hello/1000 # This is a regular expression
+
+    # The response to be returned
+    response:
+      delay: 1000
+      status: OK
+      headers:
+        "Content-Type":
+          - application/json
+      body:
+        content: |
+          {
+            "message": "Hello, Heavy!"
+          }

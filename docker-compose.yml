@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+
+  heavy-mock-http-server:
+    image: heavy-mock-http-server:dev
+    build:
+      context: server
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    environment:
+      - HEAVY_MOCK_CONFIG=/configs/basic-example.yml
+    volumes:
+      - ./examples:/configs
+

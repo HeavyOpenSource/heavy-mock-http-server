@@ -1,0 +1,4 @@
+spring:
+  test:
+    mockmvc:
+      print: default

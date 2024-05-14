@@ -1,0 +1,3 @@
+SERVER_PORT: 8080
+
+HEAVY_MOCK_CONFIG: ${HOME}/Documents/heavy-mock-http-server/examples/basic-example.yml

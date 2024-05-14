@@ -1,0 +1,22 @@
+# Declaration of endpoints
+endpoints:
+  - name: Get Hello
+
+    # If the request matches the following criteria, the response will be returned
+    request:
+      methods:
+        - GET
+      paths:
+        - /hello/? # This is a regular expression
+
+    # The response to be returned
+    response:
+      status: OK
+      headers:
+        "Content-Type":
+          - application/json
+      body:
+        content: |
+          {
+            "message": "Hello, Heavy!"
+          }
