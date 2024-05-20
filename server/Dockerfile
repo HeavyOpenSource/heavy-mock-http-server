@@ -1,4 +1,4 @@
-FROM openjdk:21 as build
+FROM openjdk:21-oracle as build
 
 WORKDIR /app
 
@@ -6,7 +6,7 @@ COPY . .
 
 RUN ./mvnw package -DskipTests
 
-FROM openjdk:21 as runtime
+FROM openjdk:21-oracle as runtime
 
 WORKDIR /app
 
