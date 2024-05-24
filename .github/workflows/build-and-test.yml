@@ -20,9 +20,4 @@ jobs:
           cache-dependency-path: 'server/pom.xml'
       - name: Build with Maven
         run: |
-          cd server
-          mvn -B package
-      - name: Build Docker image
-        run: |
-          cd server
-          docker build -t heavy-mock-http-server:dev .
+          mvn -B package --file server/pom.xml
