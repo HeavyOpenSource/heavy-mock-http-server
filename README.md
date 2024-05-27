@@ -5,7 +5,7 @@
 ![](https://img.shields.io/badge/License-MIT-blue)
 
 ![](https://img.shields.io/badge/Docker-1D63ED?logo=Docker)
-![](https://img.shields.io/badge/SpringBoot-v3.2.5-6DB33F?logo=Spring)
+![](https://img.shields.io/badge/SpringBoot-v3.3.0-6DB33F?logo=Spring)
 ![](https://img.shields.io/badge/Spring-v6.1.6-6DB33F?logo=Spring)
 ![](https://img.shields.io/badge/Java-v21.0.3-007396?logo=Oracle)
 
