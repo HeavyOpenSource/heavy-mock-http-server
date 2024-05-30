@@ -47,7 +47,6 @@ services:
 
 ## 🛠️ Configuration
 
-
 *Definition*:
 ```yaml
 endpoints:
@@ -89,71 +88,4 @@ endpoints:
         body:
           string: <string>
           file: <string>
-        
-```
-
-
-*Simple Example*:
-```yaml
-# Your HEAVY_MOCK_CONFIG file
-
-# Declaration of endpoints
-endpoints:
-  # First endpoint
-  - name: Get Hello Heavy
-    # If the request matches the following criteria, the response will be returned
-    request:
-      methods:
-        - GET
-      paths:
-        - /hello/heavy
-
-    # The response to be returned
-    response:
-      status: OK
-      headers:
-        "Content-Type":
-          - application/json
-      body: |
-        {
-        "message": "Hello, Heavy!"
-        }
-
-  - name: Get Hello for any other path
-    # If the request matches the following criteria, the response will be returned
-    request:
-      methods:
-        - GET
-      paths:
-        - /hello/.* # This is a regular expression
-
-    # The response to be returned
-    response:
-      status: OK
-      headers:
-        "Content-Type":
-          - application/json
-      body: |
-        {
-          "message": "Hello, World!"
-        }
-
-  - name: 404 Not Found
-    # If the request matches the following criteria, the response will be returned
-    request:
-      methods:
-        - GET
-      paths:
-        - /not-found
-
-    # The response to be returned
-    response:
-      status: NOT_FOUND
-      headers:
-        "Content-Type":
-          - application/json
-      body: |
-        {
-          "message": "Not Found"
-        }
 ```
