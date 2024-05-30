@@ -24,6 +24,7 @@ public class MockConfiguration {
 
 	@Bean
 	public Yaml yaml() {
+		log.info("Creating YAML parser");
 		LoaderOptions loaderOptions = new LoaderOptions();
 		loaderOptions.setAllowDuplicateKeys(false);
 		loaderOptions.setEnumCaseSensitive(false);
@@ -34,9 +35,7 @@ public class MockConfiguration {
 		Representer representer = new Representer(new DumperOptions());
 		representer.getPropertyUtils().setSkipMissingProperties(true);
 
-		Yaml yaml = new Yaml(constructor, representer);
-		log.info("Successfully configured YAML");
-		return yaml;
+		return new Yaml(constructor, representer);
 	}
 
 	@Bean
@@ -44,10 +43,16 @@ public class MockConfiguration {
 	                   MockConfigurationProperties properties,
 	                   Validator validator)
 			throws FileNotFoundException {
-		Model model = yaml.loadAs(new FileInputStream(properties. getConfig()), Model.class);
+		log.info("Loading configuration from: {}", properties.getConfig());
+		Model model = yaml.loadAs(new FileInputStream(properties.getConfig()), Model.class);
 		Set<ConstraintViolation<Model>> constraintViolations = validator.validate(model);
-		if (constraintViolations.isEmpty())
-			return model;
-		throw new ConstraintViolationException(constraintViolations);
+
+		if (!constraintViolations.isEmpty()) {
+			log.error("Invalid configuration: {}", constraintViolations);
+			throw new ConstraintViolationException(constraintViolations);
+		}
+
+		log.info("Configuration loaded successfully");
+		return model;
 	}
 }

@@ -5,7 +5,7 @@
 ![](https://img.shields.io/badge/License-MIT-blue)
 
 ![](https://img.shields.io/badge/Docker-1D63ED?logo=Docker)
-![](https://img.shields.io/badge/SpringBoot-v3.2.5-6DB33F?logo=Spring)
+![](https://img.shields.io/badge/SpringBoot-v3.3.0-6DB33F?logo=Spring)
 ![](https://img.shields.io/badge/Spring-v6.1.6-6DB33F?logo=Spring)
 ![](https://img.shields.io/badge/Java-v21.0.3-007396?logo=Oracle)
 
@@ -46,7 +46,6 @@ services:
   see the [configuration](#-configuration) section for more information or the [examples](./examples) directory
 
 ## 🛠️ Configuration
-
 
 *Definition*:
 ```yaml
@@ -89,71 +88,4 @@ endpoints:
         body:
           string: <string>
           file: <string>
-        
-```
-
-
-*Simple Example*:
-```yaml
-# Your HEAVY_MOCK_CONFIG file
-
-# Declaration of endpoints
-endpoints:
-  # First endpoint
-  - name: Get Hello Heavy
-    # If the request matches the following criteria, the response will be returned
-    request:
-      methods:
-        - GET
-      paths:
-        - /hello/heavy
-
-    # The response to be returned
-    response:
-      status: OK
-      headers:
-        "Content-Type":
-          - application/json
-      body: |
-        {
-        "message": "Hello, Heavy!"
-        }
-
-  - name: Get Hello for any other path
-    # If the request matches the following criteria, the response will be returned
-    request:
-      methods:
-        - GET
-      paths:
-        - /hello/.* # This is a regular expression
-
-    # The response to be returned
-    response:
-      status: OK
-      headers:
-        "Content-Type":
-          - application/json
-      body: |
-        {
-          "message": "Hello, World!"
-        }
-
-  - name: 404 Not Found
-    # If the request matches the following criteria, the response will be returned
-    request:
-      methods:
-        - GET
-      paths:
-        - /not-found
-
-    # The response to be returned
-    response:
-      status: NOT_FOUND
-      headers:
-        "Content-Type":
-          - application/json
-      body: |
-        {
-          "message": "Not Found"
-        }
 ```
