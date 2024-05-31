@@ -1,0 +1,31 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - '*/*'
+
+jobs:
+  upgrade-version:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'oracle'
+          java-version: '21.0.3'
+          cache: 'maven'
+          cache-dependency-path: 'server/pom.xml'
+      - name: Upgrade server version
+        run: |
+          ./set-version.sh --pom server/pom.xml
+      - name: Commit and push
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "⬆️ Upgrade server version"
