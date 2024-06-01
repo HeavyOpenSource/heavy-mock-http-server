@@ -1,0 +1,22 @@
+name: test
+
+on:
+  push:
+    branches:
+      - '*/*'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: put random number in test file
+        run: |
+          echo $RANDOM > test.txt
+      - name: Commit and push new version
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "⬆️ Upgrade server version to $(./get-next-version.sh)"
