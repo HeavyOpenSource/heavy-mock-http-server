@@ -23,8 +23,8 @@ import java.util.concurrent.ExecutorService;
 @RequiredArgsConstructor
 public class CallbackService {
 
-	private final RestClient restClient;
-
+//	private final RestClient restClient;
+/*
 	public void handleCallbacks(List<Callback> callbacks, long start) {
 		List<CompletableFuture<?>> syncCallbacks = new ArrayList<>();
 		for (Callback callback : callbacks) {
@@ -51,8 +51,9 @@ public class CallbackService {
 		sendCallback(callback);
 		return CompletableFuture.completedFuture(null);
 	}
+ */
 
-	private void sendCallback(Callback callback) {
+	/*private void sendCallback(Callback callback) {
 		DelayUtils.delay(callback.getDelay());
 		callback.getHeaders();
 
@@ -64,6 +65,6 @@ public class CallbackService {
 				.onStatus(HttpStatusCode::isError, (req, res) -> {
 					log.error("Callback {} {} failed with status {}", req.getMethod(), req.getURI(), res.getStatusCode());
 				});
-	}
+	}*/
 
 }

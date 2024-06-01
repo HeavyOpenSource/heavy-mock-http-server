@@ -42,9 +42,9 @@ public class MockController {
 		Response response = endpoint.getResponse();
 		ResponseEntity<Object> responseEntity = responseMapper.toEntity(response);
 
-		if (endpoint.getCallbacks() != null) {
+/*		if (endpoint.getCallbacks() != null) {
 			endpoint.getCallbacks().forEach(callback -> callbackService.registerCallback(callback));
-		}
+		} */
 
 		if (response.getDelay() == null) {
 			return responseEntity;
