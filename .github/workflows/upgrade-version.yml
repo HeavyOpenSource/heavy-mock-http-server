@@ -31,7 +31,7 @@ jobs:
           cache: 'maven'
           cache-dependency-path: 'server/pom.xml'
 
-      - name: put random number in test file
+      - name: Retrieve next version
         id: next-version
         run: |
           echo "value=$(./get-next-version.sh)" >> $GITHUB_OUTPUT
@@ -40,23 +40,24 @@ jobs:
         run: |
           ./set-next-version.sh --pom server/pom.xml
 
-      - name: Commit and push new version
-        uses: stefanzweifel/git-auto-commit-action@v5
+      - name: Create Tag ${{ steps.next-version.outputs.value }}
+        uses: rickstaa/action-create-tag@v1
+        id: "tag_create"
         with:
-          commit_message: "⬆️ Upgrade server version to ${{ steps.next-version.outputs.value }}"
-          tagging_message: "v${{ steps.next-version.outputs.value }}"
+          tag: "v${{ steps.next-version.outputs.value }}"
+          message: "️⬆️ Upgrade server version to ${{ steps.next-version.outputs.value }}"
 
-      - name: Build Docker image
+
+      - name: Build Docker image ${{ steps.next-version.outputs.value }}
         env:
           NEXT_VERSION: ${{ steps.next-version.outputs.value }}
         run: |
           docker build -t heavy-mock-http-server:$NEXT_VERSION server
 
-      - name: Push Docker image
+      - name: Push Docker image ${{ steps.next-version.outputs.value }}
         env:
           NEXT_VERSION: ${{ steps.next-version.outputs.value }}
         run: |
-          NEXT_VERSION=$(./get-next-version.sh)
           docker tag "heavy-mock-http-server:$NEXT_VERSION" "heavynimbus/heavy-mock-http-server:$NEXT_VERSION"
           docker push "heavynimbus/heavy-mock-http-server:$NEXT_VERSION"
 
@@ -64,12 +65,12 @@ jobs:
         run: |
           ./set-next-version.sh --pom server/pom.xml --snapshot
 
-      - name: put random number in test file
+      - name: Retrieve snapshot version
         id: snapshot-version
         run: |
           echo "value=$(echo $(./get-next-version.sh)-SNAPSHOT)" >> $GITHUB_OUTPUT
 
-      - name: Commit and push snapshot version
+      - name: Commit and push snapshot version ${{ steps.snapshot-version.outputs.value }}
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "⬆️ Upgrade server version to ${{ steps.snapshot-version.outputs.value }}"
