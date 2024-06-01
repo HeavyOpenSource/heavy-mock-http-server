@@ -1,0 +1,76 @@
+name: Upgrade Version and Deploy
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  upgrade-version:
+    runs-on: ubuntu-latest
+
+    permissions:
+      packages: write
+      contents: write
+
+    steps:
+      - name: Docker Login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'oracle'
+          java-version: '21.0.3'
+          cache: 'maven'
+          cache-dependency-path: 'server/pom.xml'
+
+      - name: Retrieve next version
+        id: next-version
+        run: |
+          echo "value=$(./get-next-version.sh)" >> $GITHUB_OUTPUT
+
+      - name: Upgrade server version
+        run: |
+          ./set-next-version.sh --pom server/pom.xml
+
+      - name: Create Tag ${{ steps.next-version.outputs.value }}
+        uses: rickstaa/action-create-tag@v1
+        id: "tag_create"
+        with:
+          tag: "v${{ steps.next-version.outputs.value }}"
+          message: "️⬆️ Upgrade server version to ${{ steps.next-version.outputs.value }}"
+
+
+      - name: Build Docker image ${{ steps.next-version.outputs.value }}
+        env:
+          NEXT_VERSION: ${{ steps.next-version.outputs.value }}
+        run: |
+          docker build -t heavy-mock-http-server:$NEXT_VERSION server
+
+      - name: Push Docker image ${{ steps.next-version.outputs.value }}
+        env:
+          NEXT_VERSION: ${{ steps.next-version.outputs.value }}
+        run: |
+          docker tag "heavy-mock-http-server:$NEXT_VERSION" "heavynimbus/heavy-mock-http-server:$NEXT_VERSION"
+          docker push "heavynimbus/heavy-mock-http-server:$NEXT_VERSION"
+
+      - name: Set snapshot version
+        run: |
+          ./set-next-version.sh --pom server/pom.xml --snapshot
+
+      - name: Retrieve snapshot version
+        id: snapshot-version
+        run: |
+          echo "value=$(echo $(./get-next-version.sh)-SNAPSHOT)" >> $GITHUB_OUTPUT
+
+      - name: Commit and push snapshot version ${{ steps.snapshot-version.outputs.value }}
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "⬆️ Upgrade server version to ${{ steps.snapshot-version.outputs.value }}"

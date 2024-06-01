@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: maven
     directory: /server
     schedule:
-      interval: weekly
+      interval: daily
     target-branch: main
     commit-message:
       prefix: '⬆️ Upgrade'
