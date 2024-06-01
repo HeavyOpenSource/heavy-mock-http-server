@@ -14,10 +14,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: put random number in test file
+        id: random
         run: |
-            echo $RANDOM > test.txt
-            NEXT_VERSION=$(./get-next-version.sh)
+          echo $RANDOM > test.txt
+          echo "NEXT_VERSION=$(./get-next-version.sh)" >> $GITHUB_OUTPUT
       - name: Commit and push new version
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "⬆️ Upgrade server version to $NEXT_VERSION"
+          commit_message: ⬆️ Upgrade server version to ${{ steps.random.outputs.NEXT_VERSION }}
+
