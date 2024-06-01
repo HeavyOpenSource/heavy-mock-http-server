@@ -20,8 +20,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Check out the repo
+      - name: Check out the repo and login with bot account
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.BOT_GITHUB_TOKEN }}
 
       - name: Setup Java 21
         uses: actions/setup-java@v4
@@ -46,7 +48,7 @@ jobs:
         with:
           tag: "v${{ steps.next-version.outputs.value }}"
           message: "️⬆️ Upgrade server version to ${{ steps.next-version.outputs.value }}"
-
+          github_token: ${{ secrets.BOT_GITHUB_TOKEN }}
 
       - name: Build Docker image ${{ steps.next-version.outputs.value }}
         env:
