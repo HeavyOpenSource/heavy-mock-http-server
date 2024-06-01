@@ -49,12 +49,6 @@ jobs:
           message: "⬆️🚀 Upgrade version to ${{ steps.next-version.outputs.value }}"
           add: "server/pom.xml"
 
-      - name: Create Tag ${{ steps.next-version.outputs.value }}
-        uses: rickstaa/action-create-tag@v1
-        id: "tag_create"
-        with:
-          tag: "v${{ steps.next-version.outputs.value }}"
-
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
@@ -63,6 +57,12 @@ jobs:
           branch: ${{ github.ref_name }}
           tags: true
           force: true
+
+      - name: Create Tag ${{ steps.next-version.outputs.value }}
+        uses: rickstaa/action-create-tag@v1
+        id: "tag_create"
+        with:
+          tag: "v${{ steps.next-version.outputs.value }}"
 
       - name: Build Docker image ${{ steps.next-version.outputs.value }}
         env:
@@ -107,9 +107,8 @@ jobs:
         with:
           token: ${{ secrets.BOT_GITHUB_TOKEN }}
           title: "🔀 Upgrade version to ${{ steps.snapshot-version.outputs.value }}"
-          body: "This PR was automatically created by the upgrade version workflow."
-          branch: "develop"
-          base: "main"
+          branch: "main"
+          base: "develop"
           labels: "auto-merge"
           assignees: "heavynimbus"
           reviewers: "heavynimbus"
