@@ -1,9 +1,10 @@
-name: Build and Test
+name: Maven Build and Test
 
 on:
   pull_request:
     branches:
       - main
+      - develop
 
 jobs:
   build:
