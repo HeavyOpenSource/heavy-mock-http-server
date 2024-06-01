@@ -3,7 +3,7 @@ name: Upgrade Version and Deploy
 on:
   push:
     branches:
-      - main
+      - '*/*'
 
 jobs:
   upgrade-version:
@@ -31,14 +31,30 @@ jobs:
           cache: 'maven'
           cache-dependency-path: 'server/pom.xml'
 
+      - name: put random number in test file
+        id: next-version
+        run: |
+          echo "value=$(./get-next-version.sh)" >> $GITHUB_OUTPUT
+
       - name: Upgrade server version
         run: |
           ./set-next-version.sh --pom server/pom.xml
+
+      - name: Commit and push new version
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "⬆️ Upgrade server version to ${{ steps.next-version.outputs.value }}"
+          tagging_message: "v${{ steps.next-version.outputs.value }}"
+
       - name: Build Docker image
+        env:
+          NEXT_VERSION: ${{ steps.next-version.outputs.value }}
         run: |
-          docker build -t heavy-mock-http-server:$(./get-next-version.sh) server
+          docker build -t heavy-mock-http-server:$NEXT_VERSION server
 
       - name: Push Docker image
+        env:
+          NEXT_VERSION: ${{ steps.next-version.outputs.value }}
         run: |
           NEXT_VERSION=$(./get-next-version.sh)
           docker tag "heavy-mock-http-server:$NEXT_VERSION" "heavynimbus/heavy-mock-http-server:$NEXT_VERSION"
@@ -48,7 +64,13 @@ jobs:
         run: |
           ./set-next-version.sh --pom server/pom.xml --snapshot
 
-      - name: Commit and push new version
+      - name: put random number in test file
+        id: snapshot-version
+        run: |
+          echo "value=$(echo $(./get-next-version.sh)-SNAPSHOT)" >> $GITHUB_OUTPUT
+
+      - name: Commit and push snapshot version
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "⬆️ Upgrade server version to $(./get-next-version.sh)"
+          commit_message: "⬆️ Upgrade server version to ${{ steps.snapshot-version.outputs.value }}"
+
