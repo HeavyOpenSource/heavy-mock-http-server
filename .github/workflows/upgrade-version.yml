@@ -37,15 +37,12 @@ jobs:
         id: versions
         shell: bash
         run: |
-          VALUE=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          VERSION=$(echo $VALUE | cut -d'-' -f1)
+          VERSIONS=$(scripts/retrieve-versions.sh server/pom.xml)
+          NEXT_VERSION=$(echo $VERSIONS | cut -d ':' -f 1)
+          NEW_SNAPSHOT=$(echo $VERSIONS | cut -d ':' -f 2)
           
-          MAJOR=$(echo $VERSION | cut -d'.' -f1)
-          MINOR=$(echo $VERSION | cut -d'.' -f2)
-          PATCH=$(echo $VERSION | cut -d'.' -f3)
-          
-          echo "next_version=$MAJOR.$MINOR.$PATCH" >> $GITHUB_OUTPUT
-          echo "new_snapshot=$MAJOR.$MINOR.$((PATCH + 1))-SNAPSHOT" >> $GITHUB_OUTPUT
+          echo "next_version=$(echo $VERSIONS | cut -d ':' -f 1)" >> $GITHUB_OUTPUT
+          echo "new_snapshot=$(echo $VERSIONS | cut -d ':' -f 2)" >> $GITHUB_OUTPUT
 
       - name: Upgrade server pom version to ${{ steps.versions.outputs.next_version }}
         shell: bash
