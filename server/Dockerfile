@@ -14,4 +14,4 @@ COPY --from=build /app/target/*.jar ./app.jar
 
 EXPOSE 80
 
-CMD java -jar ./app.jar
+CMD java -jar ./app.jar -Dserver.port=80
