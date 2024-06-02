@@ -1,7 +1,7 @@
 # Heavy Mock HTTP Server
 
 ![](https://img.shields.io/badge/Status-Under%20Development-red)
-![](https://img.shields.io/badge/Version-0.0.1-blue)
+![](https://img.shields.io/badge/Version-0.0.0-blue)
 [![](https://img.shields.io/badge/License-GPL--3.0-blue)](./LICENSE.md)
 
 ![](https://img.shields.io/badge/Docker-1D63ED?logo=Docker)
@@ -63,11 +63,11 @@ version: '3.8'
 
 services:
   heavy-mock-http-server:
-    image: heavynimbus/mock-http-server:0.0.1
+    image: heavynimbus/heavy-mock-http-server:0.0.0
     ports:
       - "8080:80"
     environment:
-      - HEAVY_MOCK_CONFIG=/configs/basic-example.yml # The configuration file that the server should use
+      - HEAVY_MOCK_CONFIG=/configs/single-endpoint.yml # The configuration file that the server should use
     volumes:
       - type: bind
         source: ./examples

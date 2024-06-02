@@ -53,7 +53,7 @@ jobs:
         shell: bash
         run: |
           sed -i 's/https:\/\/img.shields.io\/badge\/Version-[0-9]\+\.[0-9]\+\.[0-9]-blue/https:\/\/img.shields.io\/badge\/Version-${{ steps.versions.outputs.next_version }}-blue/g' README.md
-          sed -i 's/image: heavynimbus\/mock-http-server:[0-9]\+\.[0-9]\+\.[0-9]/image: heavynimbus\/mock-http-server:${{ steps.versions.outputs.next_version }}/g' README.md
+          sed -i 's/image: heavynimbus\/heavy-mock-http-server:[0-9]\+\.[0-9]\+\.[0-9]/image: heavynimbus\/heavy-mock-http-server:${{ steps.versions.outputs.next_version }}/g' README.md
 
       - name: Add & Commit
         id: add-and-commit
