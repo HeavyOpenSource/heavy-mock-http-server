@@ -1,8 +1,8 @@
 # Heavy Mock HTTP Server
 
 ![](https://img.shields.io/badge/Status-Under%20Development-red)
-![](https://img.shields.io/badge/Version-0.0.0-blue)
-![](https://img.shields.io/badge/License-MIT-blue)
+![](https://img.shields.io/badge/Version-2.0.0-blue)
+[![](https://img.shields.io/badge/License-GPL--3.0-blue)](./LICENSE.md)
 
 ![](https://img.shields.io/badge/Docker-1D63ED?logo=Docker)
 ![](https://img.shields.io/badge/SpringBoot-v3.3.0-6DB33F?logo=Spring)
@@ -58,34 +58,16 @@ endpoints:
         - <regex>
       headers:
         <string>: <string>
-        
+
     response:
       delay: <integer> # In milliseconds
       status: <HTTP_STATUS> # OK | CREATED | BAD_REQUEST | ...
       headers:
-        <string1>:
+        <string>:
           - <string>
-      
+
       body: # Only one field of body can be used
         # You can use the | character to write a multiline string
         string: <string>
         file: <string>
-
-    callbacks:
-      - delay: <integer> # In milliseconds
-        async: true | false
-        redirect: NEVER | ALWAYS | NORMAL # Default is NORMAL
-        version: HTTP_1_1 | HTTP_2 # Default is HTTP_1_1
-        connectTimeout: <duration> # Default is 10s (PT10S)
-        proxy:
-          host: <string>
-          port: <integer>
-        
-        url: <string>
-        method: GET | POST | PUT | DELETE | PATCH | OPTIONS | HEAD # Default is GET
-        headers:
-          <string>: <string>
-        body:
-          string: <string>
-          file: <string>
 ```
