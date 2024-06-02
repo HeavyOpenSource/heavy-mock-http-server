@@ -1,10 +1,15 @@
 # Heavy Mock HTTP Server
 
-![](https://img.shields.io/badge/Status-Under%20Development-red)
 ![](https://img.shields.io/badge/Version-0.0.1-blue)
 [![](https://img.shields.io/badge/License-GPL--3.0-blue)](./LICENSE.md)
 
-![](https://img.shields.io/badge/Docker-1D63ED?logo=Docker)
+*Links*:
+
+[![](https://img.shields.io/badge/Available%20On%20GitHub-181717?logo=GitHub)](https://github.com/heavynimbus/heavy-mock-http-server)
+[![](https://img.shields.io/badge/Available%20On%20Docker%20Hub-1D63ED?logo=Docker)](https://hub.docker.com/r/heavynimbus/heavy-mock-http-server)
+
+*Technologies*:
+
 ![](https://img.shields.io/badge/SpringBoot-v3.3.0-6DB33F?logo=Spring)
 ![](https://img.shields.io/badge/Spring-v6.1.6-6DB33F?logo=Spring)
 ![](https://img.shields.io/badge/Java-v21.0.3-007396?logo=Oracle)
