@@ -21,33 +21,11 @@ cases:
 
 ## 🚀 Getting Started
 
-### 🐳 Docker
+### 🛠️ Configuration
 
-```yaml
-version: '3.8'
+The server uses a configuration file to define the routes and the responses that it should return. The configuration
+file is a YAML file that contains the following fields:
 
-services:
-  heavy-mock-http-server:
-    image: heavynimbus/mock-http-server:0.0.0
-    ports:
-      - "8080:80"
-    environment:
-      - HEAVY_MOCK_CONFIG=/configs/basic-example.yml
-    volumes:
-      - ./examples:/configs
-```
-
-**Notes**:
-
-* Volumes are used to mount the configuration files to the container, so you can change the configuration without
-  rebuilding the image
-* The `HEAVY_MOCK_CONFIG` environment variable is used to specify the configuration file that the server should use
-* The configuration file is a YAML file that contains the routes and the responses that the server should return,
-  see the [configuration](#-configuration) section for more information or the [examples](./examples) directory
-
-## 🛠️ Configuration
-
-*Definition*:
 ```yaml
 endpoints:
   - name: <string>
@@ -70,4 +48,29 @@ endpoints:
         # You can use the | character to write a multiline string
         string: <string>
         file: <string>
+```
+
+**Notes**: See the [examples](./examples) directory for more information
+
+### 🐳 Docker Compose
+
+*The following example uses the configuration file `basic-example.yml` from the [examples](./examples) directory,
+if you want to use another configuration file, you need to change the `HEAVY_MOCK_CONFIG` environment variable
+and make sure that the file is in the `/configs` directory bound to the container*
+
+```yaml
+version: '3.8'
+
+services:
+  heavy-mock-http-server:
+    image: heavynimbus/mock-http-server:0.0.0
+    ports:
+      - "8080:80"
+    environment:
+      - HEAVY_MOCK_CONFIG=/configs/basic-example.yml # The configuration file that the server should use
+    volumes:
+      - type: bind
+        source: ./examples
+        target: /configs
+        read_only: true
 ```

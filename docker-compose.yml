@@ -10,7 +10,10 @@ services:
     ports:
       - "8080:80"
     environment:
-      - HEAVY_MOCK_CONFIG=/configs/basic-example.yml
+      - HEAVY_MOCK_CONFIG=/configs/single-endpoint.yml
     volumes:
-      - ./examples:/configs
+      - type: bind
+        source: ./examples
+        target: /configs
+        read_only: true
 
