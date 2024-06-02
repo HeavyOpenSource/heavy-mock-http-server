@@ -11,7 +11,7 @@
 
     <groupId>heavynimbus</groupId>
     <artifactId>heavy-mock-http-server</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <description>
         Mock HTTP server for development or testing purposes, with the ability to mock responses based on request
         parameters.
