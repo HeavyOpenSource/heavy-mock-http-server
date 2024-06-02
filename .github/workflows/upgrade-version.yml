@@ -33,35 +33,24 @@ jobs:
           cache: 'maven'
           cache-dependency-path: 'server/pom.xml'
 
-      - name: Retrieve next version
-        id: next-version
+      - name: Retrieve versions
+        id: versions
         shell: bash
         run: |
           VALUE=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           VERSION=$(echo $VALUE | cut -d'-' -f1)
+          
           MAJOR=$(echo $VERSION | cut -d'.' -f1)
           MINOR=$(echo $VERSION | cut -d'.' -f2)
           PATCH=$(echo $VERSION | cut -d'.' -f3)
           
-          echo "value=$VERSION" >> $GITHUB_OUTPUT
-          echo "major=$MAJOR" >> $GITHUB_OUTPUT
-          echo "minor=$MINOR" >> $GITHUB_OUTPUT
-          echo "patch=$PATCH" >> $GITHUB_OUTPUT
+          echo "next_version=$MAJOR.$MINOR.$PATCH" >> $GITHUB_OUTPUT
+          echo "new_snapshot=$MAJOR.$MINOR.$((PATCH + 1))-SNAPSHOT" >> $GITHUB_OUTPUT
 
-      - name: Compute snapshot version
-        id: snapshot-version
+      - name: Upgrade server pom version to ${{ steps.versions.outputs.next_version }}
         shell: bash
         run: |
-          MAJOR=${{ steps.next-version.outputs.value }}
-          MINOR=${{ steps.next-version.outputs.minor }}
-          PATCH=$((${{ steps.next-version.outputs.patch }} + 1))
-          
-          echo "value=$MAJOR.$MINOR.$PATCH-SNAPSHOT" >> $GITHUB_OUTPUT
-
-      - name: Upgrade server pom version
-        shell: bash
-        run: |
-          mvn versions:set -DnewVersion=${{ steps.next-version.outputs.value }} --file server/pom.xml
+          mvn versions:set -DnewVersion=${{ steps.versions.outputs.next_version }} --file server/pom.xml
 
       - name: Upgrade version in README.md
         shell: bash
@@ -74,14 +63,14 @@ jobs:
         uses: EndBug/add-and-commit@v9.1.4
         with:
           github_token: ${{ secrets.BOT_GITHUB_TOKEN }}
-          message: "⬆️🚀 Upgrade version to ${{ steps.next-version.outputs.value }}"
+          message: "⬆️🚀 Upgrade version to ${{ steps.versions.outputs.next_version }}"
           add: "server/pom.xml"
 
-      - name: Create Tag ${{ steps.next-version.outputs.value }}
+      - name: Create Tag v${{ steps.versions.outputs.next_version }}
         uses: rickstaa/action-create-tag@v1
         id: "tag_create"
         with:
-          tag: "v${{ steps.next-version.outputs.value }}"
+          tag: "v${{ steps.versions.outputs.next_version }}"
           commit_sha: ${{ steps.add-and-commit.outputs.commit_sha }}
 
       - name: Push changes
@@ -94,28 +83,28 @@ jobs:
           tags: true
           force: true
 
-      - name: Build Docker image ${{ steps.next-version.outputs.value }}
+      - name: Build Docker image ${{ steps.versions.outputs.next_version }}
         env:
-          NEXT_VERSION: ${{ steps.next-version.outputs.value }}
+          NEXT_VERSION: ${{ steps.versions.outputs.next_version }}
         run: |
           docker build -t heavy-mock-http-server:$NEXT_VERSION server
 
-      - name: Push Docker image ${{ steps.next-version.outputs.value }}
+      - name: Push Docker image ${{ steps.versions.outputs.next_version }}
         env:
-          NEXT_VERSION: ${{ steps.next-version.outputs.value }}
+          NEXT_VERSION: ${{ steps.versions.outputs.next_version }}
         run: |
           docker tag "heavy-mock-http-server:$NEXT_VERSION" "heavynimbus/heavy-mock-http-server:$NEXT_VERSION"
           docker push "heavynimbus/heavy-mock-http-server:$NEXT_VERSION"
 
       - name: Set snapshot version
         run: |
-          mvn versions:set -DnewVersion=${{ steps.snapshot-version.outputs.value }} --file server/pom.xml
+          mvn versions:set -DnewVersion=${{ steps.versions.outputs.new_snapshot }} --file server/pom.xml
 
       - name: Add & Commit snapshot version
         uses: EndBug/add-and-commit@v9.1.4
         with:
           github_token: ${{ secrets.BOT_GITHUB_TOKEN }}
-          message: "⬆️🚀 Upgrade version to ${{ steps.snapshot-version.outputs.value }}"
+          message: "⬆️🚀 Upgrade version to ${{ steps.versions.outputs.new_snapshot }}"
           add: "server/pom.xml"
 
       - name: Push snapshot version
