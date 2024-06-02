@@ -58,6 +58,42 @@ jobs:
           
           echo "value=$MAJOR.$MINOR.$PATCH-SNAPSHOT" >> $GITHUB_OUTPUT
 
+      - name: Upgrade server pom version
+        shell: bash
+        run: |
+          mvn versions:set -DnewVersion=${{ steps.next-version.outputs.value }} --file server/pom.xml
+
+      - name: Upgrade version in README.md
+        shell: bash
+        run: |
+          sed -i 's/https:\/\/img.shields.io\/badge\/Version-[0-9]\+\.[0-9]\+\.[0-9]-blue/https:\/\/img.shields.io\/badge\/Version-${{ steps.next-version.outputs.value }}-blue/g' README.md
+          sed -i 's/image: heavynimbus\/mock-http-server:[0-9]\+\.[0-9]\+\.[0-9]/image: heavynimbus\/mock-http-server:${{ steps.next-version.outputs.value }}/g' README.md
+
+      - name: Retrieve next version
+        id: next-version
+        shell: bash
+        run: |
+          VALUE=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          VERSION=$(echo $VALUE | cut -d'-' -f1)
+          MAJOR=$(echo $VERSION | cut -d'.' -f1)
+          MINOR=$(echo $VERSION | cut -d'.' -f2)
+          PATCH=$(echo $VERSION | cut -d'.' -f3)
+          
+          echo "value=$VERSION" >> $GITHUB_OUTPUT
+          echo "major=$MAJOR" >> $GITHUB_OUTPUT
+          echo "minor=$MINOR" >> $GITHUB_OUTPUT
+          echo "patch=$PATCH" >> $GITHUB_OUTPUT
+
+      - name: Compute snapshot version
+        id: snapshot-version
+        shell: bash
+        run: |
+          MAJOR=${{ steps.next-version.outputs.value }}
+          MINOR=${{ steps.next-version.outputs.minor }}
+          PATCH=$((${{ steps.next-version.outputs.patch }} + 1))
+          
+          echo "value=$MAJOR.$MINOR.$PATCH-SNAPSHOT" >> $GITHUB_OUTPUT
+
       - name: Upgrade server pom version to ${{ steps.next-version.outputs.value }}
         shell: bash
         run: |
