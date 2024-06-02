@@ -52,22 +52,22 @@ jobs:
       - name: Upgrade version in README.md
         shell: bash
         run: |
-          sed -i 's/https:\/\/img.shields.io\/badge\/Version-[0-9]\+\.[0-9]\+\.[0-9]-blue/https:\/\/img.shields.io\/badge\/Version-${{ steps.next-version.outputs.value }}-blue/g' README.md
-          sed -i 's/image: heavynimbus\/mock-http-server:[0-9]\+\.[0-9]\+\.[0-9]/image: heavynimbus\/mock-http-server:${{ steps.next-version.outputs.value }}/g' README.md
+          sed -i 's/https:\/\/img.shields.io\/badge\/Version-[0-9]\+\.[0-9]\+\.[0-9]-blue/https:\/\/img.shields.io\/badge\/Version-${{ steps.versions.outputs.next_version }}-blue/g' README.md
+          sed -i 's/image: heavynimbus\/mock-http-server:[0-9]\+\.[0-9]\+\.[0-9]/image: heavynimbus\/mock-http-server:${{ steps.versions.outputs.next_version }}/g' README.md
 
       - name: Add & Commit
         id: add-and-commit
         uses: EndBug/add-and-commit@v9.1.4
         with:
           github_token: ${{ secrets.BOT_GITHUB_TOKEN }}
-          message: "⬆️🚀 Upgrade version to ${{ steps.versions.outputs.next_version }}"
-          add: "server/pom.xml"
+          message: "🚀⬆️ Upgrade version to ${{ steps.versions.outputs.next_version }}"
+          add: "server/pom.xml README.md"
 
-      - name: Create Tag v${{ steps.versions.outputs.next_version }}
+      - name: Create Tag ${{ steps.versions.outputs.next_version }}
         uses: rickstaa/action-create-tag@v1
         id: "tag_create"
         with:
-          tag: "v${{ steps.versions.outputs.next_version }}"
+          tag: "${{ steps.versions.outputs.next_version }}"
           commit_sha: ${{ steps.add-and-commit.outputs.commit_sha }}
 
       - name: Push changes
@@ -101,7 +101,7 @@ jobs:
         uses: EndBug/add-and-commit@v9.1.4
         with:
           github_token: ${{ secrets.BOT_GITHUB_TOKEN }}
-          message: "⬆️🚀 Upgrade version to ${{ steps.versions.outputs.new_snapshot }}"
+          message: "⬆️ Upgrade version to ${{ steps.versions.outputs.new_snapshot }}"
           add: "server/pom.xml"
 
       - name: Push snapshot version
