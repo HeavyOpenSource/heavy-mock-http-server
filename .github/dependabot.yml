@@ -4,6 +4,6 @@ updates:
     directory: /server
     schedule:
       interval: daily
-    target-branch: main
+    target-branch: develop
     commit-message:
       prefix: '⬆️ Upgrade'
