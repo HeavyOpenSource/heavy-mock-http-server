@@ -1,5 +1,9 @@
 package heavynimbus.server.model;
 
 public enum HttpMethod {
-	GET, POST, PUT, PATCH, DELETE;
+  GET,
+  POST,
+  PUT,
+  PATCH,
+  DELETE;
 }
