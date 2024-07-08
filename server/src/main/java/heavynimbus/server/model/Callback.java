@@ -13,23 +13,18 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 public class Callback {
-	@Min(0)
-	private long delay = 0;
+  @Min(0)
+  private long delay = 0;
 
-	@NotNull
-	private boolean async;
+  @NotNull private boolean async;
 
-	@NotBlank
-	private String url;
+  @NotBlank private String url;
 
-	@NotNull
-	private HttpMethod method = HttpMethod.GET;
+  @NotNull private HttpMethod method = HttpMethod.GET;
 
-	@Valid
-	private Body body;
+  @Valid private Body body;
 
-	private Map<@NotNull String, String> headers;
+  private Map<@NotNull String, String> headers;
 
-	@NotNull
-	private Duration connectTimeout = Duration.ofSeconds(10);
+  @NotNull private Duration connectTimeout = Duration.ofSeconds(10);
 }

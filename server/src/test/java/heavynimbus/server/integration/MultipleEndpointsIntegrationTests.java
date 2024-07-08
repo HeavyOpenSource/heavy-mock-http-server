@@ -16,43 +16,42 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest(
-		webEnvironment = RANDOM_PORT,
-		properties = {
-				"heavy.mock.config=classpath:configs/multiple-endpoints.yml",
-		})
+    webEnvironment = RANDOM_PORT,
+    properties = {
+      "heavy.mock.config=classpath:configs/multiple-endpoints.yml",
+    })
 @EnableConfigurationProperties(MockConfigurationProperties.class)
 public class MultipleEndpointsIntegrationTests implements IntegrationTest {
 
-	@Autowired
-	private MockMvc mockMvc;
+  @Autowired private MockMvc mockMvc;
 
-	@Test
-	@DisplayName("GET /hello/heavy returns 200 \"Hello, Heavy!\"")
-	public void testHelloHeavy() throws Exception {
-		mockMvc.perform(get(getHelloUri("heavy")))
+  @Test
+  @DisplayName("GET /hello/heavy returns 200 \"Hello, Heavy!\"")
+  public void testHelloHeavy() throws Exception {
+    mockMvc
+        .perform(get(getHelloUri("heavy")))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType("application/json"))
+        .andExpect(content().json("{\"message\":\"Hello, Heavy!\"}"));
+  }
 
-				.andExpect(status().isOk())
-				.andExpect(content().contentType("application/json"))
-				.andExpect(content().json("{\"message\":\"Hello, Heavy!\"}"));
-	}
+  @Test
+  @DisplayName("GET /hello/nimbus returns 200 \"Hello, World!\"")
+  public void testHelloNimbus() throws Exception {
+    mockMvc
+        .perform(get(getHelloUri("nimbus")))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType("application/json"))
+        .andExpect(content().json("{\"message\":\"Hello, World!\"}"));
+  }
 
-	@Test
-	@DisplayName("GET /hello/nimbus returns 200 \"Hello, World!\"")
-	public void testHelloNimbus() throws Exception {
-		mockMvc.perform(get(getHelloUri("nimbus")))
-
-				.andExpect(status().isOk())
-				.andExpect(content().contentType("application/json"))
-				.andExpect(content().json("{\"message\":\"Hello, World!\"}"));
-	}
-
-	@Test
-	@DisplayName("GET /not-found returns 404 \"Not Found\"")
-	public void testNotFound() throws Exception {
-		mockMvc.perform(get(getNotFoundUri()))
-
-				.andExpect(status().isNotFound())
-				.andExpect(content().contentType("application/json"))
-				.andExpect(content().json("{\"message\":\"Not Found\"}"));
-	}
+  @Test
+  @DisplayName("GET /not-found returns 404 \"Not Found\"")
+  public void testNotFound() throws Exception {
+    mockMvc
+        .perform(get(getNotFoundUri()))
+        .andExpect(status().isNotFound())
+        .andExpect(content().contentType("application/json"))
+        .andExpect(content().json("{\"message\":\"Not Found\"}"));
+  }
 }

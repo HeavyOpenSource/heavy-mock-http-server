@@ -15,18 +15,16 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ResponseMapper {
 
-	public ResponseEntity<Object> toEntity(Response response) {
-		var builder = ResponseEntity.status(response.getStatus());
-		Optional.ofNullable(response.getHeaders())
-				.orElse(Map.of())
-				.entrySet()
-				.stream()
-				.map(entry -> Map.entry(entry.getKey(), entry.getValue().toArray(new String[0])))
-				.forEach(entry -> builder.header(entry.getKey(), entry.getValue()));
-		if (response.getBody() == null) return builder.build();
-		Body body = response.getBody();
-		if (body.getContent() != null) return builder.body(body.getContent());
-		else if (body.getFile() != null) return builder.body(new FileSystemResource(new File(body.getFile())));
-		return builder.build();
-	}
+  public ResponseEntity<Object> toEntity(Response response) {
+    var builder = ResponseEntity.status(response.getStatus());
+    Optional.ofNullable(response.getHeaders()).orElse(Map.of()).entrySet().stream()
+        .map(entry -> Map.entry(entry.getKey(), entry.getValue().toArray(new String[0])))
+        .forEach(entry -> builder.header(entry.getKey(), entry.getValue()));
+    if (response.getBody() == null) return builder.build();
+    Body body = response.getBody();
+    if (body.getContent() != null) return builder.body(body.getContent());
+    else if (body.getFile() != null)
+      return builder.body(new FileSystemResource(new File(body.getFile())));
+    return builder.build();
+  }
 }

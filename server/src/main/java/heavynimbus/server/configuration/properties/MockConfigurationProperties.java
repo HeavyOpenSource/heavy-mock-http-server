@@ -8,5 +8,5 @@ import java.io.File;
 @Data
 @ConfigurationProperties(prefix = "heavy.mock")
 public class MockConfigurationProperties {
-	private File config;
+  private File config;
 }

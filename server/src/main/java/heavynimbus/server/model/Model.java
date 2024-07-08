@@ -15,5 +15,5 @@ import java.util.List;
 @AllArgsConstructor
 public class Model {
 
-	private List<@Valid @NotNull Endpoint> endpoints;
+  private List<@Valid @NotNull Endpoint> endpoints;
 }

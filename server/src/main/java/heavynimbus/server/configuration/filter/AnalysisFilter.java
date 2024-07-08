@@ -23,22 +23,28 @@ import java.util.UUID;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class AnalysisFilter extends OncePerRequestFilter {
 
-	@Override
-	protected void doFilterInternal(@NonNull HttpServletRequest request,
-	                                @NonNull HttpServletResponse response,
-	                                @NonNull FilterChain filterChain)
-			throws ServletException, IOException {
-		long start = System.currentTimeMillis();
-		TrackIdHighlighting.generateTrackId();
-		String query = request.getQueryString() == null ? "" : "?" + request.getQueryString();
-		log.info("Received request: {} {}{}", request.getMethod(), request.getRequestURI(), query);
-		request.setAttribute("start", start);
+  @Override
+  protected void doFilterInternal(
+      @NonNull HttpServletRequest request,
+      @NonNull HttpServletResponse response,
+      @NonNull FilterChain filterChain)
+      throws ServletException, IOException {
+    long start = System.currentTimeMillis();
+    TrackIdHighlighting.generateTrackId();
+    String query = request.getQueryString() == null ? "" : "?" + request.getQueryString();
+    log.info("Received request: {} {}{}", request.getMethod(), request.getRequestURI(), query);
+    request.setAttribute("start", start);
 
-		filterChain.doFilter(request, response);
+    filterChain.doFilter(request, response);
 
-		long end = System.currentTimeMillis();
-		log.info("Request: {} {}{} took {}ms", request.getMethod(), request.getRequestURI(), query, end - start);
-		;
-		TrackIdHighlighting.clearTrackId();
-	}
+    long end = System.currentTimeMillis();
+    log.info(
+        "Request: {} {}{} took {}ms",
+        request.getMethod(),
+        request.getRequestURI(),
+        query,
+        end - start);
+    ;
+    TrackIdHighlighting.clearTrackId();
+  }
 }

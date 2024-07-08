@@ -13,9 +13,9 @@ import java.util.concurrent.Executors;
 @Configuration
 public class AsyncConfiguration {
 
-	@Bean
-	public Executor asyncExecutor() {
-		log.info("Creating virtual thread executor");
-		return Executors.newVirtualThreadPerTaskExecutor();
-	}
+  @Bean
+  public Executor asyncExecutor() {
+    log.info("Creating virtual thread executor");
+    return Executors.newVirtualThreadPerTaskExecutor();
+  }
 }

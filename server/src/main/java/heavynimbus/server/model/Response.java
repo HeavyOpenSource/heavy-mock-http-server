@@ -19,13 +19,12 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Response {
-	@Min(0)
-	private Long delay;
+  @Min(0)
+  private Long delay;
 
-	private HttpStatus status = HttpStatus.OK;
+  private HttpStatus status = HttpStatus.OK;
 
-	private Map<@NotNull String, @NotNull List<String>> headers;
+  private Map<@NotNull String, @NotNull List<String>> headers;
 
-	@Valid
-	private Body body;
+  @Valid private Body body;
 }

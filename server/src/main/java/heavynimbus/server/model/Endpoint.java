@@ -16,18 +16,16 @@ import java.util.List;
 @AllArgsConstructor
 public class Endpoint {
 
-	private String name;
+  private String name;
 
-	@Valid
-	private Request request;
+  @Valid private Request request;
 
-	@Valid
-	private Response response;
+  @Valid private Response response;
 
-	private List<@Valid @NotNull Callback> callbacks;
+  private List<@Valid @NotNull Callback> callbacks;
 
-	public boolean supports(HttpServletRequest httpServletRequest) {
-		if (request == null) return true;
-		return request.supports(httpServletRequest);
-	}
+  public boolean supports(HttpServletRequest httpServletRequest) {
+    if (request == null) return true;
+    return request.supports(httpServletRequest);
+  }
 }
