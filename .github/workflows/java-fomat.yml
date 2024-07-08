@@ -17,12 +17,8 @@ jobs:
         with:
           distribution: 'oracle'
           java-version: '21.0.3'
-      - name: Download Google Java Format
-        run: |
-          curl -L https://github.com/google/google-java-format/releases/download/v1.22.0/google-java-format-1.22.0-all-deps.jar \
-            --output google-java-format.jar
+          cache: 'maven'
+          cache-dependency-path: 'server/pom.xml'
       - name: Format Java Files
         run: |
-          java -jar google-java-format.jar --replace $(find server -name '*.java')
-      - name: Check for Changes
-        run: git --no-pager diff --exit-code
+          mvn -f server/pom.xml fmt:check

@@ -1,9 +1,8 @@
 package heavynimbus.server.configuration.properties;
 
+import java.io.File;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-
-import java.io.File;
 
 @Data
 @ConfigurationProperties(prefix = "heavy.mock")

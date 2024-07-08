@@ -1,22 +1,8 @@
 package heavynimbus.server.service;
 
-import heavynimbus.server.model.Callback;
-import heavynimbus.server.util.DelayUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
-
-import java.io.IOException;
-import java.net.http.HttpClient;
-import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
 
 @Log4j2
 @Service

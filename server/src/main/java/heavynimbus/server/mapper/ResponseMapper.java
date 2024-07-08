@@ -2,14 +2,13 @@ package heavynimbus.server.mapper;
 
 import heavynimbus.server.model.Body;
 import heavynimbus.server.model.Response;
+import java.io.File;
+import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-
-import java.io.File;
-import java.util.Map;
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor

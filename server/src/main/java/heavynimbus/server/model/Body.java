@@ -1,12 +1,11 @@
 package heavynimbus.server.model;
 
 import jakarta.validation.constraints.AssertTrue;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.http.HttpRequest;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor

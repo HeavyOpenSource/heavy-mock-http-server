@@ -3,15 +3,14 @@ package heavynimbus.server.model;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
-
-import java.util.List;
-import java.util.Map;
 
 @Log4j2
 @Getter

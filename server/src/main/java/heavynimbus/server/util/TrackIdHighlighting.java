@@ -3,11 +3,10 @@ package heavynimbus.server.util;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.pattern.color.ANSIConstants;
 import ch.qos.logback.core.pattern.color.ForegroundCompositeConverterBase;
-import org.slf4j.MDC;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import org.slf4j.MDC;
 
 public class TrackIdHighlighting extends ForegroundCompositeConverterBase<ILoggingEvent> {
 

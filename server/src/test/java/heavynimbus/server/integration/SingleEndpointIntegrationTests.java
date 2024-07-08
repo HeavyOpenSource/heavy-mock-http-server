@@ -18,37 +18,38 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @AutoConfigureMockMvc
 @SpringBootTest(
-		webEnvironment = RANDOM_PORT,
-		properties = {
-				"heavy.mock.config=classpath:configs/single-endpoint.yml",
-		})
+    webEnvironment = RANDOM_PORT,
+    properties = {
+      "heavy.mock.config=classpath:configs/single-endpoint.yml",
+    })
 @EnableConfigurationProperties(MockConfigurationProperties.class)
 public class SingleEndpointIntegrationTests implements IntegrationTest {
 
-	@Autowired
-	private MockMvc mockMvc;
+  @Autowired private MockMvc mockMvc;
 
-	@Test
-	@DisplayName("Simple Config Tests")
-	public void testSimpleConfig() throws Exception {
-		mockMvc.perform(get(getHelloUri()))
-
-				.andExpect(status().isOk())
-				.andExpect(header().string("Content-Type", "application/json"))
-				.andExpect(content().json("""
+  @Test
+  @DisplayName("Simple Config Tests")
+  public void testSimpleConfig() throws Exception {
+    mockMvc
+        .perform(get(getHelloUri()))
+        .andExpect(status().isOk())
+        .andExpect(header().string("Content-Type", "application/json"))
+        .andExpect(
+            content()
+                .json(
+                    """
 						{
 							"message": "Hello, Heavy!"
 						}
 						"""));
-	}
+  }
 
-	@Test
-	@DisplayName("Simple Config Tests on not found")
-	public void testSimpleConfigNotFound() throws Exception {
-		mockMvc.perform(request(HttpMethod.GET.name(), new URI("/not-found")))
-
-				.andExpect(status().isNotFound())
-				.andExpect(content().string(""));
-	}
-
+  @Test
+  @DisplayName("Simple Config Tests on not found")
+  public void testSimpleConfigNotFound() throws Exception {
+    mockMvc
+        .perform(request(HttpMethod.GET.name(), new URI("/not-found")))
+        .andExpect(status().isNotFound())
+        .andExpect(content().string(""));
+  }
 }

@@ -27,35 +27,43 @@ import org.springframework.web.client.RestClient;
 @EnableConfigurationProperties({MockConfigurationProperties.class})
 public class WebConfiguration {
 
-	private final Map<Callback, RestClient> restClients;
+  private final Map<Callback, RestClient> restClients;
 
-	public WebConfiguration(Model model) {
-		restClients = model.getEndpoints()
-				.stream()
-				.map(Endpoint::getCallbacks)
-				.filter(Objects::nonNull)
-				.filter(Predicate.not(Collection::isEmpty))
-				.flatMap(Collection::stream)
-				.distinct()
-				.collect(Collectors.toMap(Function.identity(), this::createRestClient));
-	}
+  public WebConfiguration(Model model) {
+    restClients =
+        model.getEndpoints().stream()
+            .map(Endpoint::getCallbacks)
+            .filter(Objects::nonNull)
+            .filter(Predicate.not(Collection::isEmpty))
+            .flatMap(Collection::stream)
+            .distinct()
+            .collect(Collectors.toMap(Function.identity(), this::createRestClient));
+  }
 
-	private RestClient createRestClient(Callback callback) {
-		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-		factory.setConnectTimeout(callback.getConnectTimeout());
-		return RestClient.builder()
-				.defaultStatusHandler(HttpStatusCode::isError, WebConfiguration::handleErrorStatus)
-				.defaultStatusHandler(Predicate.not(HttpStatusCode::isError), WebConfiguration::handleSuccessStatus)
-				.defaultHeaders(headers -> callback.getHeaders().forEach(headers::set))
-				.requestFactory(factory)
-				.build();
-	}
+  private RestClient createRestClient(Callback callback) {
+    HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+    factory.setConnectTimeout(callback.getConnectTimeout());
+    return RestClient.builder()
+        .defaultStatusHandler(HttpStatusCode::isError, WebConfiguration::handleErrorStatus)
+        .defaultStatusHandler(
+            Predicate.not(HttpStatusCode::isError), WebConfiguration::handleSuccessStatus)
+        .defaultHeaders(headers -> callback.getHeaders().forEach(headers::set))
+        .requestFactory(factory)
+        .build();
+  }
 
-	private static void handleErrorStatus(HttpRequest req, ClientHttpResponse res) throws IOException {
-		log.error("Callback {} {} failed with status {}", req.getMethod(), req.getURI(), res.getStatusCode());
-	}
+  private static void handleErrorStatus(HttpRequest req, ClientHttpResponse res)
+      throws IOException {
+    log.error(
+        "Callback {} {} failed with status {}", req.getMethod(), req.getURI(), res.getStatusCode());
+  }
 
-	private static void handleSuccessStatus(HttpRequest req, ClientHttpResponse res) throws IOException {
-		log.info("Callback {} {} succeeded with status {}", req.getMethod(), req.getURI(), res.getStatusCode());
-	}
+  private static void handleSuccessStatus(HttpRequest req, ClientHttpResponse res)
+      throws IOException {
+    log.info(
+        "Callback {} {} succeeded with status {}",
+        req.getMethod(),
+        req.getURI(),
+        res.getStatusCode());
+  }
 }

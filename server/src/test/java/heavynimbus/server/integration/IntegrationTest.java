@@ -1,10 +1,9 @@
 package heavynimbus.server.integration;
 
 import heavynimbus.server.configuration.properties.MockConfigurationProperties;
+import java.net.URI;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-
-import java.net.URI;
 
 @AutoConfigureMockMvc
 @EnableConfigurationProperties(MockConfigurationProperties.class)

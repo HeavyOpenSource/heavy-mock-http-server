@@ -5,6 +5,9 @@ import heavynimbus.server.model.Model;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.Set;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,10 +16,6 @@ import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.representer.Representer;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.Set;
 
 @Log4j2
 @Configuration
