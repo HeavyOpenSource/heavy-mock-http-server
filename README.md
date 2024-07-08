@@ -60,8 +60,7 @@ endpoints:
 ### 🐳 Docker Compose
 
 *The following example uses the configuration file `basic-example.yml` from the [examples](./examples) directory,
-if you want to use another configuration file, you need to change the `HEAVY_MOCK_CONFIG` environment variable
-and make sure that the file is in the `/configs` directory bound to the container*
+if you want to use another configuration file, you must change the `source` field in the `volumes` section*
 
 ```yaml
 version: '3.8'
@@ -71,11 +70,9 @@ services:
     image: heavynimbus/heavy-mock-http-server:0.0.1
     ports:
       - "8080:80"
-    environment:
-      - HEAVY_MOCK_CONFIG=/configs/single-endpoint.yml # The configuration file that the server should use
     volumes:
       - type: bind
-        source: ./examples
-        target: /configs
+        source: ./examples/single-endpoint.yml
+        target: /etc/heavy-mock/config.yml
         read_only: true
 ```

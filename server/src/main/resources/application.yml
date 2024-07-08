@@ -13,4 +13,4 @@ spring:
 
 heavy:
   mock:
-    config: ${HEAVY_MOCK_CONFIG}
+    config: ${HEAVY_MOCK_CONFIG:/etc/heavy-mock/config.yml}
