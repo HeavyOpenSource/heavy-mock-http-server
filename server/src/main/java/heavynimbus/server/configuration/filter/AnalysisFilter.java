@@ -37,7 +37,8 @@ public class AnalysisFilter extends OncePerRequestFilter {
 		filterChain.doFilter(request, response);
 
 		long end = System.currentTimeMillis();
-		log.info("Request: {} {}{} took {}ms", request.getMethod(), request.getRequestURI(), query, end - start);;
+		log.info("Request: {} {}{} took {}ms", request.getMethod(), request.getRequestURI(), query, end - start);
+		;
 		TrackIdHighlighting.clearTrackId();
 	}
 }

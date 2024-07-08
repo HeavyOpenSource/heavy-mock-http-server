@@ -8,6 +8,8 @@ spring:
   threads:
     virtual:
       enabled: true
+  banner:
+    location: classpath:assets/banner.txt
 
 heavy:
   mock:

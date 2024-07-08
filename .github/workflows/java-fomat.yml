@@ -1,0 +1,28 @@
+name: Format
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+
+  formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'oracle'
+          java-version: '21.0.3'
+      - name: Download Google Java Format
+        run: |
+          curl -L https://github.com/google/google-java-format/releases/download/v1.22.0/google-java-format-1.22.0-all-deps.jar \
+            --output google-java-format.jar
+      - name: Format Java Files
+        run: |
+          java -jar google-java-format.jar --replace $(find server -name '*.java')
+      - name: Check for Changes
+        run: git --no-pager diff --exit-code
