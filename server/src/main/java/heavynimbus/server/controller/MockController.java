@@ -8,6 +8,8 @@ import heavynimbus.server.service.CallbackService;
 import heavynimbus.server.util.DelayUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
+
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MockController {
   private final Model model;
+  private final Validator validator;
   private final ResponseMapper responseMapper;
   private final CallbackService callbackService;
 
   @RequestMapping("/**")
   public ResponseEntity<Object> handle(HttpServletRequest request) {
-    long start = (Long) request.getAttribute("start");
+    long start = DelayUtils.getStart(request);
     Optional<Endpoint> endpointOpt =
         model.getEndpoints().stream().filter(endpoint -> endpoint.supports(request)).findFirst();
 
@@ -42,13 +45,12 @@ public class MockController {
     Response response = endpoint.getResponse();
     ResponseEntity<Object> responseEntity = responseMapper.toEntity(response);
 
-    /*		if (endpoint.getCallbacks() != null) {
-    	endpoint.getCallbacks().forEach(callback -> callbackService.registerCallback(callback));
-    } */
+    endpoint.getCallbacks().forEach(c -> callbackService.handleCallback(c, start));
 
     if (response.getDelay() == null) {
       return responseEntity;
     }
+
     DelayUtils.delayExactly(start, response.getDelay());
     return responseEntity;
   }

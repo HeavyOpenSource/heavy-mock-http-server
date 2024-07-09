@@ -1,5 +1,6 @@
 package heavynimbus.server.configuration.filter;
 
+import heavynimbus.server.util.DelayUtils;
 import heavynimbus.server.util.TrackIdHighlighting;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,11 +27,10 @@ public class AnalysisFilter extends OncePerRequestFilter {
       @NonNull HttpServletResponse response,
       @NonNull FilterChain filterChain)
       throws ServletException, IOException {
-    long start = System.currentTimeMillis();
+    long start = DelayUtils.initStart(request);
     TrackIdHighlighting.generateTrackId();
     String query = request.getQueryString() == null ? "" : "?" + request.getQueryString();
     log.info("Received request: {} {}{}", request.getMethod(), request.getRequestURI(), query);
-    request.setAttribute("start", start);
 
     filterChain.doFilter(request, response);
 
@@ -41,7 +41,6 @@ public class AnalysisFilter extends OncePerRequestFilter {
         request.getRequestURI(),
         query,
         end - start);
-    ;
     TrackIdHighlighting.clearTrackId();
   }
 }

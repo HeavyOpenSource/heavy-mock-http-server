@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import java.time.Duration;
 import java.util.Map;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,12 +11,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Callback {
-  @Min(0)
-  private long delay = 0;
+  @NotBlank private String destination;
 
-  @NotNull private boolean async;
-
-  @NotBlank private String url;
+  @NotBlank private String path;
 
   @NotNull private HttpMethod method = HttpMethod.GET;
 
@@ -25,5 +21,6 @@ public class Callback {
 
   private Map<@NotNull String, String> headers;
 
-  @NotNull private Duration connectTimeout = Duration.ofSeconds(10);
+  @Min(0)
+  private long delay = 0;
 }
