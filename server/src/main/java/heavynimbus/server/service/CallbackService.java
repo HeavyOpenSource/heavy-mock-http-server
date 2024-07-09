@@ -2,69 +2,53 @@ package heavynimbus.server.service;
 
 import heavynimbus.server.model.Callback;
 import heavynimbus.server.util.DelayUtils;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
-
-import java.io.IOException;
-import java.net.http.HttpClient;
-import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
 
 @Log4j2
 @Service
 @RequiredArgsConstructor
 public class CallbackService {
 
-//	private final RestClient restClient;
-/*
-	public void handleCallbacks(List<Callback> callbacks, long start) {
-		List<CompletableFuture<?>> syncCallbacks = new ArrayList<>();
-		for (Callback callback : callbacks) {
-			if (callback.isAsync()) {
-				syncCallbacks.add(sendCallbackAsync(callback));
-				continue;
-			}
-			sendCallback(callback);
-		}
-	}
+  private final Map<Callback, RestClient> restClients;
 
-	public void registerCallback(Callback callback) {
-		log.info("Registering callback: " + callback);
-		if (callback.isAsync()) {
-			sendCallbackAsync(callback);
-			return;
-		}
-		sendCallback(callback);
-	}
+  @Async("callbackExecutor")
+  public void handleCallback(Callback callback, long start) {
+    log.info(
+        "Handling callback to {}: {} {}",
+        callback.getDestination(),
+        callback.getMethod(),
+        callback.getPath());
+    RestClient client = restClients.get(callback);
+    var headers = headers(callback);
 
-	@Async
-	protected CompletableFuture<Void> sendCallbackAsync(Callback callback) {
-		log.info("Sending callback asynchronously: " + callback);
-		sendCallback(callback);
-		return CompletableFuture.completedFuture(null);
-	}
- */
+    var bodySpec =
+        client
+            .method(HttpMethod.valueOf(callback.getMethod().name()))
+            .uri(callback.getPath())
+            .headers(httpHeaders -> httpHeaders.putAll(headers));
 
-	/*private void sendCallback(Callback callback) {
-		DelayUtils.delay(callback.getDelay());
-		callback.getHeaders();
+    if (callback.getBody() != null) {
+      bodySpec = bodySpec.body(callback.getBody().getBody());
+    }
 
-		restClient.method(HttpMethod.valueOf(callback.getMethod().name()))
-				.uri(callback.getUrl())
-				.headers(headers -> callback.getHeaders().forEach(headers::set))
-				.body(callback.getBody())
-				.retrieve()
-				.onStatus(HttpStatusCode::isError, (req, res) -> {
-					log.error("Callback {} {} failed with status {}", req.getMethod(), req.getURI(), res.getStatusCode());
-				});
-	}*/
+    DelayUtils.delayExactly(start, callback.getDelay());
+    String response = bodySpec.retrieve().body(String.class);
+    log.info("Callback response: {}", response);
+  }
 
+  static Map<String, List<String>> headers(Callback callback) {
+    return Optional.ofNullable(callback.getHeaders()).map(Map::entrySet).stream()
+        .flatMap(Set::stream)
+        .collect(Collectors.toMap(Map.Entry::getKey, entry -> List.of(entry.getValue())));
+  }
 }

@@ -14,5 +14,5 @@
         <appender-ref ref="STDOUT"/>
     </root>
 
-    <logger name="heavynimbus.server" level="debug"/>
+    <logger name="heavynimbus.server" level="info"/>
 </configuration>

@@ -5,10 +5,17 @@ spring:
   application:
     name: heavy-mock-http-server
 
+  main:
+    banner-mode: console
+    web-application-type: servlet
+
   threads:
     virtual:
       enabled: true
 
+  banner:
+    location: classpath:assets/banner.txt
+
 heavy:
   mock:
-    config: ${HEAVY_MOCK_CONFIG}
+    config: ${HEAVY_MOCK_CONFIG:/etc/heavy-mock/config.yml}

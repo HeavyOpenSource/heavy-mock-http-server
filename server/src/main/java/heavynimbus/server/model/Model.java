@@ -2,18 +2,22 @@ package heavynimbus.server.model;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.util.List;
+import lombok.*;
 
 @Getter
 @Setter
+@Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Model {
 
-	private List<@Valid @NotNull Endpoint> endpoints;
+  @Builder.Default
+  @NotNull(message = "must not be null")
+  private List<@Valid @NotNull(message = "must not be null") Destination> destinations = List.of();
+
+  @Builder.Default
+  @NotNull(message = "must not be null")
+  private List<@Valid @NotNull(message = "must not be null") Endpoint> endpoints = List.of();
 }

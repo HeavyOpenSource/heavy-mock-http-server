@@ -9,11 +9,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:80"
-    environment:
-      - HEAVY_MOCK_CONFIG=/configs/single-endpoint.yml
     volumes:
       - type: bind
-        source: ./examples
-        target: /configs
+        source: ./examples/single-endpoint.yml
+        target: /etc/heavy-mock/config.yml
         read_only: true
-
