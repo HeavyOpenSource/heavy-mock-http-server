@@ -1,5 +1,3 @@
 package heavynimbus.server.integration;
 
-public class CallbackEndpointsIntegrationTests {
-
-}
+public class CallbackEndpointsIntegrationTests {}

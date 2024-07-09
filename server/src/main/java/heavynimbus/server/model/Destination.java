@@ -1,10 +1,9 @@
 package heavynimbus.server.model;
 
 import jakarta.validation.constraints.*;
-
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
-
 import lombok.*;
 
 @Getter
@@ -37,7 +36,9 @@ public class Destination {
   @PositiveOrZero(message = "must be greater than or equal to 0")
   private long delay = 0L;
 
-  @Builder.Default private Map<@NotNull String, String> headers = Map.of();
+  @Builder.Default private Map<@NotNull String, List<String>> headers = Map.of();
+
+  @Builder.Default private Map<@NotNull String, List<String>> query = Map.of();
 
   public enum Protocol {
     HTTP,

@@ -21,8 +21,7 @@ public class Endpoint {
 
   @Valid private Response response;
 
-  @NotNull
-  private List<@Valid @NotNull Callback> callbacks = List.of();
+  @NotNull private List<@Valid @NotNull Callback> callbacks = List.of();
 
   public boolean supports(HttpServletRequest httpServletRequest) {
     if (request == null) return true;

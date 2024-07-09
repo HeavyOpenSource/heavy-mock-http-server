@@ -2,15 +2,8 @@ package heavynimbus.server.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.function.Supplier;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -20,41 +13,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 @Log4j2
 @DisplayName("Model validation tests")
-public class ModelTests {
-
-  private final Validator validator;
-
-  public ModelTests() {
-    try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
-      validator = factory.getValidator();
-    }
-  }
-
-  static <T> void display(Set<ConstraintViolation<T>> violations) {
-    if (violations.isEmpty()) {
-      log.info("No violations found");
-      return;
-    }
-    violations.stream()
-        .map(v -> String.format("%s: %s", v.getPropertyPath(), v.getMessage()))
-        .forEach(log::info);
-  }
-
-  record ExpectedViolation(String property, String message) {}
-
-  <T> void constraintTest(T object, List<ExpectedViolation> expectedViolations) {
-    log.info("Validating: {}", object);
-    Set<ConstraintViolation<T>> violations = validator.validate(object);
-    display(violations);
-    assertEquals(expectedViolations.size(), violations.size());
-    Supplier<ExpectedViolation> expectedViolationSupplier = expectedViolations.iterator()::next;
-    violations.forEach(
-        violation -> {
-          ExpectedViolation expectedViolation = expectedViolationSupplier.get();
-          assertEquals(expectedViolation.property(), violation.getPropertyPath().toString());
-          assertEquals(expectedViolation.message(), violation.getMessage());
-        });
-  }
+public class ModelTests extends ValidationTest {
 
   @Test
   @DisplayName("Model can be empty")
@@ -67,7 +26,7 @@ public class ModelTests {
   public void assertModelCannotHaveNullDestinationList() {
     constraintTest(
         Model.builder().destinations(null).build(),
-        List.of(new ExpectedViolation("destinations", "must not be null")));
+        List.of(new PropertyViolation("destinations", "must not be null")));
   }
 
   @Test
@@ -75,7 +34,7 @@ public class ModelTests {
   public void assertModelCannotHaveNullEndpointList() {
     constraintTest(
         Model.builder().endpoints(null).build(),
-        List.of(new ExpectedViolation("endpoints", "must not be null")));
+        List.of(new PropertyViolation("endpoints", "must not be null")));
   }
 
   @Test
@@ -85,7 +44,7 @@ public class ModelTests {
     destinations.add(null);
     constraintTest(
         Model.builder().destinations(destinations).build(),
-        List.of(new ExpectedViolation("destinations[0].<list element>", "must not be null")));
+        List.of(new PropertyViolation("destinations[0].<list element>", "must not be null")));
   }
 
   @Test
@@ -95,7 +54,7 @@ public class ModelTests {
     endpoints.add(null);
     constraintTest(
         Model.builder().endpoints(endpoints).build(),
-        List.of(new ExpectedViolation("endpoints[0].<list element>", "must not be null")));
+        List.of(new PropertyViolation("endpoints[0].<list element>", "must not be null")));
   }
 
   @Nested
@@ -110,7 +69,7 @@ public class ModelTests {
     public void assertDestinationMustHaveName() {
       constraintTest(
           Destination.builder().name(null).host("localhost").build(),
-          List.of(new ExpectedViolation("name", "must not be null or blank")));
+          List.of(new PropertyViolation<>("name", "must not be null or blank")));
     }
 
     @Test
@@ -118,7 +77,7 @@ public class ModelTests {
     public void assertDestinationCannotHaveBlankName() {
       constraintTest(
           Destination.builder().name("  ").host("localhost").build(),
-          List.of(new ExpectedViolation("name", "must not be null or blank")));
+          List.of(new PropertyViolation<>("name", "must not be null or blank")));
     }
 
     @Test
@@ -126,7 +85,7 @@ public class ModelTests {
     public void assertDestinationCannotHaveNullHost() {
       constraintTest(
           Destination.builder().name("destination").host(null).build(),
-          List.of(new ExpectedViolation("host", "must not be null or blank")));
+          List.of(new PropertyViolation<>("host", "must not be null or blank")));
     }
 
     @Test
@@ -134,7 +93,7 @@ public class ModelTests {
     public void assertDestinationCannotHaveBlankHost() {
       constraintTest(
           Destination.builder().name("destination").host("  ").build(),
-          List.of(new ExpectedViolation("host", "must not be null or blank")));
+          List.of(new PropertyViolation<>("host", "must not be null or blank")));
     }
 
     @Test
@@ -142,7 +101,7 @@ public class ModelTests {
     public void assertDestinationCannotHaveNullProtocol() {
       constraintTest(
           Destination.builder().name("destination").host("localhost").protocol(null).build(),
-          List.of(new ExpectedViolation("protocol", "must not be null")));
+          List.of(new PropertyViolation<>("protocol", "must not be null")));
     }
 
     @Test
@@ -157,7 +116,7 @@ public class ModelTests {
     public void assertDestinationCannotHaveNegativePort(int port) {
       constraintTest(
           Destination.builder().name("destination").host("localhost").port(port).build(),
-          List.of(new ExpectedViolation("port", "must be greater than 0")));
+          List.of(new PropertyViolation<>("port", "must be greater than 0")));
     }
 
     @ValueSource(ints = {65536, 70000})
@@ -166,7 +125,7 @@ public class ModelTests {
     public void assertDestinationCannotHavePortGreaterThan65535(int port) {
       constraintTest(
           Destination.builder().name("destination").host("localhost").port(port).build(),
-          List.of(new ExpectedViolation("port", "must be less than or equal to 65535")));
+          List.of(new PropertyViolation<>("port", "must be less than or equal to 65535")));
     }
 
     @Test
@@ -180,7 +139,7 @@ public class ModelTests {
     public void assertDestinationCannotHaveNullBasePath() {
       constraintTest(
           Destination.builder().name("destination").host("localhost").basePath(null).build(),
-          List.of(new ExpectedViolation("basePath", "must not be null")));
+          List.of(new PropertyViolation<>("basePath", "must not be null")));
     }
 
     @Test
@@ -195,7 +154,7 @@ public class ModelTests {
     public void assertDestinationCannotHaveNegativeDelay(long delay) {
       constraintTest(
           Destination.builder().name("destination").host("localhost").delay(delay).build(),
-          List.of(new ExpectedViolation("delay", "must be greater than or equal to 0")));
+          List.of(new PropertyViolation<>("delay", "must be greater than or equal to 0")));
     }
 
     @Test

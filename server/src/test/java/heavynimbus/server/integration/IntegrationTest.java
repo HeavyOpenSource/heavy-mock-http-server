@@ -1,12 +1,7 @@
 package heavynimbus.server.integration;
 
-import heavynimbus.server.configuration.properties.MockConfigurationProperties;
 import java.net.URI;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 
-@AutoConfigureMockMvc
-@EnableConfigurationProperties(MockConfigurationProperties.class)
 public interface IntegrationTest {
   default URI getHelloUri() {
     return getHelloUri(null);

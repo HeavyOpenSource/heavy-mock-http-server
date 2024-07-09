@@ -100,7 +100,7 @@ public class MockConfiguration {
 
     Optional.ofNullable(destination.getHeaders())
         .orElseGet(HashMap::new)
-        .forEach(builder::defaultHeader);
+        .forEach((key, value) -> builder.defaultHeader(key, value.toArray(new String[0])));
 
     return builder.build();
   }

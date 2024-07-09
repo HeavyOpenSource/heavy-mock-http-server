@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.StreamingHttpOutputMessage;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -24,7 +23,11 @@ public class CallbackService {
 
   @Async("callbackExecutor")
   public void handleCallback(Callback callback, long start) {
-    log.info("Handling callback to {}: {} {}", callback.getDestination(), callback.getMethod(), callback.getPath());
+    log.info(
+        "Handling callback to {}: {} {}",
+        callback.getDestination(),
+        callback.getMethod(),
+        callback.getPath());
     RestClient client = restClients.get(callback);
     var headers = headers(callback);
 

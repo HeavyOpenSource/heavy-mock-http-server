@@ -8,8 +8,6 @@ import heavynimbus.server.service.CallbackService;
 import heavynimbus.server.util.DelayUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
-
-import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MockController {
   private final Model model;
-  private final Validator validator;
   private final ResponseMapper responseMapper;
   private final CallbackService callbackService;
 
