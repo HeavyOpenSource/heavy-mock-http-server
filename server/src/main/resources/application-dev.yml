@@ -1,3 +1,7 @@
 SERVER_PORT: 8080
 
-HEAVY_MOCK_CONFIG: ${HOME}/Documents/heavy-mock-http-server/examples/single-endpoint.yml
+HEAVY_MOCK_CONFIG: ${HOME}/Documents/heavy-mock-http-server/examples/callback-endpoint.yml
+
+logging:
+  level:
+    heavynimbus.server: DEBUG

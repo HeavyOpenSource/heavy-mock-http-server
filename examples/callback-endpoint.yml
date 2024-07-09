@@ -1,0 +1,66 @@
+destinations:
+  -
+  - name: "Server 1"
+    protocol: http
+    host: localhost
+    port: 8080
+    base-url: /hello
+
+
+# Declaration of endpoints
+endpoints:
+  - name: Get Hello
+
+    # If the request matches the following criteria, the response will be returned
+    request:
+      methods:
+        - GET
+      paths:
+        - / # This is a regular expression
+
+    # The response to be returned
+    response:
+      status: OK
+      headers:
+        "Content-Type":
+          - application/json
+      body:
+        content: |
+          {
+            "message": "Hello, Heavy!"
+          }
+    callbacks:
+      - destination: "Server 1"
+        method: POST
+        path: /users
+        delay: 5000
+        headers:
+          "Content-Type":
+            - application/json
+        body:
+          content: |
+            {
+            "name": "Heavy"
+            }
+          
+
+  - name: Create User
+
+    # If the request matches the following criteria, the response will be returned
+    request:
+      methods:
+        - POST
+      paths:
+        - /users
+
+    # The response to be returned
+    response:
+      status: CREATED
+      headers:
+        "Content-Type":
+          - application/json
+      body:
+        content: |
+          {
+            "message": "User created"
+          }

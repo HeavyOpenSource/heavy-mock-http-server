@@ -24,7 +24,7 @@ public class MockController {
 
   @RequestMapping("/**")
   public ResponseEntity<Object> handle(HttpServletRequest request) {
-    long start = (Long) request.getAttribute("start");
+    long start = DelayUtils.getStart(request);
     Optional<Endpoint> endpointOpt =
         model.getEndpoints().stream().filter(endpoint -> endpoint.supports(request)).findFirst();
 
@@ -42,13 +42,12 @@ public class MockController {
     Response response = endpoint.getResponse();
     ResponseEntity<Object> responseEntity = responseMapper.toEntity(response);
 
-    /*		if (endpoint.getCallbacks() != null) {
-    	endpoint.getCallbacks().forEach(callback -> callbackService.registerCallback(callback));
-    } */
+    endpoint.getCallbacks().forEach(c -> callbackService.handleCallback(c, start));
 
     if (response.getDelay() == null) {
       return responseEntity;
     }
+
     DelayUtils.delayExactly(start, response.getDelay());
     return responseEntity;
   }

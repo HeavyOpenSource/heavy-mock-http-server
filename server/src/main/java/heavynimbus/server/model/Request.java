@@ -1,30 +1,54 @@
 package heavynimbus.server.model;
 
+import static heavynimbus.server.validation.ValidationConstants.*;
+
 import heavynimbus.server.util.QueryParser;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.util.MultiValueMap;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Request {
-  @NotNull private List<@NotNull HttpMethod> methods;
+  @Builder.Default
+  @NotNull(message = NOT_NULL_VALIDATION_MESSAGE)
+  @Size(min = 1, message = NOT_EMPTY_VALIDATION_MESSAGE)
+  @UniqueElements(message = UNIQUE_ELEMENTS_VALIDATION_MESSAGE)
+  private List<@NotNull(message = NOT_NULL_VALIDATION_MESSAGE) HttpMethod> methods =
+      List.of(HttpMethod.values());
 
-  @NotNull private List<String> paths;
+  @Builder.Default
+  @NotNull(message = NOT_NULL_VALIDATION_MESSAGE)
+  @Size(min = 1, message = NOT_EMPTY_VALIDATION_MESSAGE)
+  @UniqueElements(message = UNIQUE_ELEMENTS_VALIDATION_MESSAGE)
+  private List<@NotBlank(message = NOT_BLANK_VALIDATION_MESSAGE) String> paths = List.of("^/?.*$");
 
-  private Map<@NotNull String, @NotNull List<String>> headers;
+  @Builder.Default
+  @NotNull(message = NOT_NULL_VALIDATION_MESSAGE)
+  private Map<
+          @NotBlank(message = NOT_BLANK_VALIDATION_MESSAGE) String,
+          @NotNull(message = NOT_NULL_VALIDATION_MESSAGE) List<
+              @NotBlank(message = NOT_BLANK_VALIDATION_MESSAGE) String>>
+      headers = Map.of();
 
-  private Map<@NotNull String, @NotNull List<String>> query;
+  @Builder.Default
+  @NotNull(message = NOT_NULL_VALIDATION_MESSAGE)
+  private Map<
+          @NotBlank(message = NOT_BLANK_VALIDATION_MESSAGE) String,
+          @NotNull(message = NOT_NULL_VALIDATION_MESSAGE) List<
+              @NotBlank(message = NOT_BLANK_VALIDATION_MESSAGE) String>>
+      query = Map.of();
 
   public boolean supports(HttpServletRequest request) {
     boolean anyMethodMatches =
@@ -36,7 +60,7 @@ public class Request {
     boolean anyPathMatches = paths.stream().anyMatch(path -> request.getRequestURI().matches(path));
     if (!anyPathMatches) return false;
 
-    if (headers != null) {
+    if (!headers.isEmpty()) {
       for (String key : headers.keySet()) {
         List<String> expectedHeaderValues = headers.get(key);
         List<String> requestHeaderValues = List.of(request.getHeader(key));
@@ -45,7 +69,7 @@ public class Request {
       }
     }
 
-    if (query == null) {
+    if (query.isEmpty()) {
       return true;
     }
 
