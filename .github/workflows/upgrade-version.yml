@@ -2,13 +2,16 @@ name: Upgrade Version and Deploy
 
 on:
   pull_request:
-    types: [ closed ]
+    types:
+      - closed
     branches:
       - 'main'
 
 jobs:
   upgrade-version:
     runs-on: ubuntu-latest
+
+    if: ${{ github.event.pull_request.merged == true }}
 
     permissions:
       contents: write
@@ -73,6 +76,8 @@ jobs:
         run: git tag ${{ steps.versions.outputs.next_version }} HEAD
 
       - name: Git Push changes and tags
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
         run: git push --force origin HEAD:${{ github.ref_name }} --tags
 
       - name: Build Docker image ${{ steps.versions.outputs.next_version }}
@@ -99,4 +104,6 @@ jobs:
         run: git commit -m "⬆️ Upgrade version to ${{ steps.versions.outputs.new_snapshot }}"
 
       - name: Git Push changes
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
         run: git push --force origin HEAD:${{ github.ref_name }}
