@@ -35,7 +35,7 @@ jobs:
 
       - name: Setup Git
         env:
-          GIT_AUTHOR_NAME: GitHub Actions
+          GIT_AUTHOR_NAME: ${{ secrets.BOT_USERNAME }}
           GIT_AUTHOR_EMAIL: "actions@users.noreply.github.com"
         run: |
           git config --global user.name "${{env.GIT_AUTHOR_NAME}}"
@@ -78,7 +78,7 @@ jobs:
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.BOT_GITHUB_TOKEN }}
           repository: ${{ github.repository }}
           branch: ${{ github.ref_name }}
           tags: true
@@ -109,7 +109,7 @@ jobs:
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.BOT_GITHUB_TOKEN }}
           repository: ${{ github.repository }}
           branch: ${{ github.ref_name }}
           tags: true
