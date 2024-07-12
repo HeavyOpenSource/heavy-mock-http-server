@@ -33,6 +33,14 @@ jobs:
           cache: 'maven'
           cache-dependency-path: 'server/pom.xml'
 
+      - name: Setup Git
+        env:
+          GIT_AUTHOR_NAME: GitHub Actions
+          GIT_AUTHOR_EMAIL: "actions@users.noreply.github.com"
+        run: |
+          git config --global user.name "${{env.GIT_AUTHOR_NAME}}"
+          git config --global user.email "${{env.GIT_AUTHOR_EMAIL}}"
+
       - name: Retrieve versions
         id: versions
         shell: bash
