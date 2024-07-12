@@ -40,6 +40,9 @@ jobs:
         run: |
           git config --global user.name "${{env.GIT_AUTHOR_NAME}}"
           git config --global user.email "${{env.GIT_AUTHOR_EMAIL}}"
+          git config push.followTags true
+          git fetch --tags
+          git pull --tags
 
       - name: Retrieve versions
         id: versions
@@ -72,8 +75,13 @@ jobs:
       - name: Git Tag ${{ steps.versions.outputs.next_version }}
         run: git tag ${{ steps.versions.outputs.next_version }} HEAD
 
-      - name: Git Push changes and tags
-        run: git push --force origin HEAD:${{ github.ref_name }} --tags
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          branch: ${{ github.ref_name }}
+          tags: true
 
       - name: Build Docker image ${{ steps.versions.outputs.next_version }}
         env:
@@ -98,5 +106,10 @@ jobs:
       - name: Git Commit changes
         run: git commit -m "⬆️ Upgrade version to ${{ steps.versions.outputs.new_snapshot }}"
 
-      - name: Git Push changes
-        run: git push --force origin HEAD:${{ github.ref_name }}
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          branch: ${{ github.ref_name }}
+          tags: true
