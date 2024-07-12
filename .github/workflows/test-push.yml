@@ -1,0 +1,16 @@
+name: test push
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  upgrade-version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Echo variables
+        run: |
+          echo base_ref: ${{ github.event.push.base_ref }}
+          echo ref: ${{ github.event.push.ref }}
