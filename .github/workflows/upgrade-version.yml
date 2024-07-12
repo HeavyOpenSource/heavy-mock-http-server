@@ -55,31 +55,17 @@ jobs:
           sed -i 's/https:\/\/img.shields.io\/badge\/Version-[0-9]\+\.[0-9]\+\.[0-9]-blue/https:\/\/img.shields.io\/badge\/Version-${{ steps.versions.outputs.next_version }}-blue/g' README.md
           sed -i 's/image: heavynimbus\/heavy-mock-http-server:[0-9]\+\.[0-9]\+\.[0-9]/image: heavynimbus\/heavy-mock-http-server:${{ steps.versions.outputs.next_version }}/g' README.md
 
-      - name: Add & Commit
-        id: add-and-commit
-        uses: EndBug/add-and-commit@v9.1.4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          message: "🚀⬆️ Upgrade version to ${{ steps.versions.outputs.next_version }}"
-          add: "server/pom.xml README.md"
-          push: --force
+      - name: Git Add changes
+        run: git add server/pom.xml README.md
 
-      - name: Create Tag ${{ steps.versions.outputs.next_version }}
-        uses: rickstaa/action-create-tag@v1
-        id: "tag_create"
-        with:
-          tag: "${{ steps.versions.outputs.next_version }}"
-          commit_sha: ${{ steps.add-and-commit.outputs.commit_sha }}
+      - name: Git Commit changes
+        run: git commit -m "🚀⬆️ Upgrade version to ${{ steps.versions.outputs.next_version }}"
 
-      - name: Push changes
-        id: push-changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          branch: ${{ github.ref_name }}
-          tags: true
-          force: true
+      - name: Git Tag ${{ steps.versions.outputs.next_version }}
+        run: git tag ${{ steps.versions.outputs.next_version }} HEAD
+
+      - name: Git Push changes and tags
+        run: git push --force origin HEAD:${{ github.ref_name }} --tags
 
       - name: Build Docker image ${{ steps.versions.outputs.next_version }}
         env:
@@ -98,18 +84,11 @@ jobs:
         run: |
           mvn versions:set -DnewVersion=${{ steps.versions.outputs.new_snapshot }} --file server/pom.xml
 
-      - name: Add & Commit snapshot version
-        uses: EndBug/add-and-commit@v9.1.4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          message: "⬆️ Upgrade version to ${{ steps.versions.outputs.new_snapshot }}"
-          add: "server/pom.xml"
+      - name: Git Add changes
+        run: git add server/pom.xml
 
-      - name: Push snapshot version
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          branch: ${{ github.ref_name }}
-          tags: true
-          force: true
+      - name: Git Commit changes
+        run: git commit -m "⬆️ Upgrade version to ${{ steps.versions.outputs.new_snapshot }}"
+
+      - name: Git Push changes
+        run: git push --force origin HEAD:${{ github.ref_name }}
