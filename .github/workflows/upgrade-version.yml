@@ -23,7 +23,7 @@ jobs:
       - name: Check out the repo and login with bot account
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.BOT_GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Java 21
         uses: actions/setup-java@v4
@@ -59,7 +59,7 @@ jobs:
         id: add-and-commit
         uses: EndBug/add-and-commit@v9.1.4
         with:
-          github_token: ${{ secrets.BOT_GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           message: "🚀⬆️ Upgrade version to ${{ steps.versions.outputs.next_version }}"
           add: "server/pom.xml README.md"
 
@@ -74,7 +74,7 @@ jobs:
         id: push-changes
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.BOT_GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
           branch: ${{ github.ref_name }}
           tags: true
@@ -100,14 +100,14 @@ jobs:
       - name: Add & Commit snapshot version
         uses: EndBug/add-and-commit@v9.1.4
         with:
-          github_token: ${{ secrets.BOT_GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           message: "⬆️ Upgrade version to ${{ steps.versions.outputs.new_snapshot }}"
           add: "server/pom.xml"
 
       - name: Push snapshot version
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.BOT_GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
           branch: ${{ github.ref_name }}
           tags: true
