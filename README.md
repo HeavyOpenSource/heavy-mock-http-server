@@ -1,6 +1,6 @@
 # Heavy Mock HTTP Server
 
-![](https://img.shields.io/badge/Version-0.0.1-blue)
+![](https://img.shields.io/badge/Version-0.1.0-blue)
 [![](https://img.shields.io/badge/License-GPL--3.0-blue)](./LICENSE.md)
 
 *Links*:
@@ -67,7 +67,7 @@ version: '3.8'
 
 services:
   heavy-mock-http-server:
-    image: heavynimbus/heavy-mock-http-server:0.0.1
+    image: heavynimbus/heavy-mock-http-server:0.1.0
     ports:
       - "8080:80"
     volumes:
